@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "SimpleTextEditor"
+    }
+  },
+  "defaultProject": "SimpleTextEditor",
+  "cli": {
+    "analytics": "8f9ddc99-246d-4cec-982d-4b0324fb19c5"
+  }
 }
