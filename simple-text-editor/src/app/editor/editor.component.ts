@@ -9,6 +9,7 @@ import { Component, HostListener, OnInit } from "@angular/core";
 export class EditorComponent implements OnInit {
 	public readonly keyCodes: { [key: string]: number } = constants.KEY_CODES;
 
+	public showContextMenu = false;
 	public writtenText: string[] = ["Start typing here"];
 	public index: number;
 
@@ -101,5 +102,10 @@ export class EditorComponent implements OnInit {
 			return;
 		}
 		this.writeOnLine(event.key);
+	}
+
+	@HostListener("document: contextmenu", ["$event"])
+	public toggleContextMenu(event): void {
+		console.log(event);
 	}
 }
