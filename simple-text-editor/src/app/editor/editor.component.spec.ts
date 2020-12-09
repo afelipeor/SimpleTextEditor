@@ -21,4 +21,10 @@ describe("EditorComponent", () => {
 	it("should create", () => {
 		expect(component).toBeTruthy();
 	});
+
+	it("should toggle context menu", () => {
+		expect(component.showContextMenu).toBeFalsy();
+		component.toggleContextMenu(event);
+		expect(component.showContextMenu).toBeTruthy();
+	});
 });

@@ -5,12 +5,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { EditorComponent } from './editor/editor.component';
 import { ContextMenuComponent } from './context-menu/context-menu.component';
+import { AboutTheEditorComponent } from './about-the-editor/about-the-editor.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     EditorComponent,
-    ContextMenuComponent
+    ContextMenuComponent,
+    AboutTheEditorComponent
   ],
   imports: [
     BrowserModule,
