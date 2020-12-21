@@ -12,17 +12,22 @@ export class ContextMenuComponent implements OnInit {
 	public readonly icons: {
 		[key: string]: SafeHtml;
 	} = this.generateIconObject();
+	public readonly iconList: SafeHtml[] = Object.values(this.icons).map(
+		(value) => value
+	);
 
 	constructor(private utils: Utils) {}
 
-	ngOnInit(): void {}
+	ngOnInit(): void {
+		console.log("icons", this.icons);
+		console.log("iconList:", this.iconList);
+	}
 
 	private generateIconObject(): { [key: string]: SafeHtml } {
 		const iconObject: { [key: string]: SafeHtml } = {};
-		for (const icon of Object.keys(icons)) {
-			iconObject[icon] = this.makeSvgCodeSafe(icons[icon]);
+		for (const icon of Object.keys(icons.CONTEXT_MENU)) {
+			iconObject[icon] = this.makeSvgCodeSafe(icons.CONTEXT_MENU[icon]);
 		}
-		console.log("iconObject:", iconObject);
 		return iconObject;
 	}
 

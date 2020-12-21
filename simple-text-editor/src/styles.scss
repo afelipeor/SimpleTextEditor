@@ -1,0 +1,33 @@
+@import "./assets/variables/_colors";
+
+html {
+	body {
+		margin: none;
+		background-color: $background-color;
+		font-size: 1em;
+		font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+		color: $text-color;
+
+		ul {
+			&.menu {
+				list-style: none;
+				display: flex;
+			}
+		}
+
+		[contextmenu] {
+			outline: none;
+			background: none;
+		}
+
+		i {
+			&.icon {
+				svg {
+					fill: $text-color;
+					width: 2em;
+					height: 2em;
+				}
+			}
+		}
+	}
+}

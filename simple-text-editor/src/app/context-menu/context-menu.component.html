@@ -1,7 +1,7 @@
 <div class="context-menu">
-	<ul class="context-menu-list">
-		<li class="context-menu-item"
-			><button><i class="icon" [innerHTML]="icons.BOLD"></i></button
+	<ul class="context-menu-list menu">
+		<li class="context-menu-item" *ngFor="let icon of iconList"
+			><button><i class="icon" [innerHTML]="icon"></i></button
 		></li>
 	</ul>
 </div>
