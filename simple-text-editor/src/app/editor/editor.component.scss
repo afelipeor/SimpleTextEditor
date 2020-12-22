@@ -1,1 +1,10 @@
+@import "../../assets/variables/colors";
 
+.editor {
+	p {
+		&:focus {
+			outline: none;
+			background-color: $focus-background-color;
+		}
+	}
+}

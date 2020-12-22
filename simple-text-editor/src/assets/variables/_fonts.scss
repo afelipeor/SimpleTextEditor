@@ -1,0 +1,42 @@
+@mixin font($font-family, $font-file, $weight, $style) {
+	@font-face {
+		font-family: $font-family;
+		src: url($font-file + ".ttf") format("truetype");
+		font-weight: $weight;
+		font-style: $style;
+	}
+}
+
+@include font("Poppins", "../fonts/Poppins/Poppins-Black", 900, normal);
+@include font("Poppins", "../fonts/Poppins/Poppins-ExtraBold", 800, normal);
+@include font("Poppins", "../fonts/Poppins/Poppins-Bold", 700, normal);
+@include font("Poppins", "../fonts/Poppins/Poppins-SemiBold", 600, normal);
+@include font("Poppins", "../fonts/Poppins/Poppins-Regular", 500, normal);
+@include font("Poppins", "../fonts/Poppins/Poppins-Medium", 400, normal);
+@include font("Poppins", "../fonts/Poppins/Poppins-Light", 300, normal);
+@include font("Poppins", "../fonts/Poppins/Poppins-ExtraLight", 200, normal);
+@include font("Poppins", "../fonts/Poppins/Poppins-Thin", 100, normal);
+@include font("Poppins", "../fonts/Poppins/Poppins-BlackItalic", 900, italic);
+@include font(
+	"Poppins",
+	"../fonts/Poppins/Poppins-ExtraBoldItalic",
+	800,
+	italic
+);
+@include font("Poppins", "../fonts/Poppins/Poppins-BoldItalic", 700, italic);
+@include font(
+	"Poppins",
+	"../fonts/Poppins/Poppins-SemiBoldItalic",
+	600,
+	italic
+);
+@include font("Poppins", "../fonts/Poppins/Poppins-Italic", 500, italic);
+@include font("Poppins", "../fonts/Poppins/Poppins-MediumItalic", 400, italic);
+@include font("Poppins", "../fonts/Poppins/Poppins-LightItalic", 300, italic);
+@include font(
+	"Poppins",
+	"../fonts/Poppins/Poppins-ExtraLightItalic",
+	200,
+	italic
+);
+@include font("Poppins", "../fonts/Poppins/Poppins-ThinItalic", 100, italic);

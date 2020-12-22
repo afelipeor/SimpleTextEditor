@@ -1,11 +1,16 @@
 @import "./assets/variables/_colors";
 
+// Mixins
+
+@import "./assets/variables/_fonts.scss";
+
 html {
 	body {
 		margin: none;
 		background-color: $background-color;
 		font-size: 1em;
-		font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+		font-family: "Poppins", sans-serif;
+		font-weight: 400;
 		color: $text-color;
 
 		ul {

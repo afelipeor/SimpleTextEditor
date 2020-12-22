@@ -1,6 +1,6 @@
-import { SafeHtml } from "@angular/platform-browser";
+import { SafeHtml } from "../../../node_modules/@angular/platform-browser";
 import icons from "./../../assets/icons/icons";
-import { Component, OnInit, Sanitizer } from "@angular/core";
+import { Component, OnInit } from "../../../node_modules/@angular/core";
 import Utils from "../../utils/utils";
 
 @Component({
