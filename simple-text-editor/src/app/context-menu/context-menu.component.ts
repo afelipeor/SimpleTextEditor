@@ -1,6 +1,6 @@
-import { SafeHtml } from "../../../node_modules/@angular/platform-browser";
-import icons from "./../../assets/icons/icons";
-import { Component, OnInit } from "../../../node_modules/@angular/core";
+import { SafeHtml } from "@angular/platform-browser";
+import icons from "../../assets/icons/icons";
+import { Component, OnInit } from "@angular/core";
 import Utils from "../../utils/utils";
 
 @Component({
@@ -18,10 +18,7 @@ export class ContextMenuComponent implements OnInit {
 
 	constructor(private utils: Utils) {}
 
-	ngOnInit(): void {
-		console.log("icons", this.icons);
-		console.log("iconList:", this.iconList);
-	}
+	ngOnInit(): void {}
 
 	private generateIconObject(): { [key: string]: SafeHtml } {
 		const iconObject: { [key: string]: SafeHtml } = {};

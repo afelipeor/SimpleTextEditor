@@ -14,4 +14,5 @@ export const constants: any = {
 		End: 35,
 		Insert: 45,
 	},
+	IS_EMPTY_TEXT: () => null || undefined || "",
 };

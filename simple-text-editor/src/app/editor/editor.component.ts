@@ -9,9 +9,11 @@ import { Component, HostListener, OnInit } from "@angular/core";
 export class EditorComponent implements OnInit {
 	public readonly keyCodes: { [key: string]: number } = constants.KEY_CODES;
 
-	public showContextMenu = true;
+	public showContextMenu = false;
 	public writtenText: string[] = ["Start typing here"];
 	public index: number;
+
+	private clickCounter = 0;
 
 	constructor() {}
 
@@ -20,7 +22,7 @@ export class EditorComponent implements OnInit {
 	private writeOnLine(key: string): void {
 		let capturedString: string = this.writtenText[this.index]
 			? this.writtenText[this.index]
-			: "";
+			: "\n";
 
 		capturedString = `${capturedString}${key}`;
 
@@ -30,6 +32,7 @@ export class EditorComponent implements OnInit {
 	private createNewLine(): void {
 		this.index = this.index + 1;
 		this.writtenText.splice(this.index, 0);
+		console.log("this.writtenText:", this.writtenText);
 	}
 
 	@HostListener("document:mousedown", ["$event"])
@@ -44,6 +47,23 @@ export class EditorComponent implements OnInit {
 			elementToFocus.setAttribute("contenteditable", "true");
 			elementToFocus.focus();
 		});
+		this.getSelection(event, elementToFocus);
+	}
+
+	public getSelection(event, elementToFocus: HTMLElement): void {
+		this.clickCounter = this.clickCounter + 1;
+
+		if (this.clickCounter % 2 !== 0) {
+			return;
+		}
+
+		this.clickCounter = 0;
+		const selection: any = window.getSelection();
+		const selectionText: string = selection.toString();
+
+		if (selectionText !== constants.IS_EMPTY_STRING) {
+			this.showContextMenu = true;
+		}
 	}
 
 	public removeContentEditable(): void {
@@ -70,7 +90,7 @@ export class EditorComponent implements OnInit {
 			event.which <= this.keyCodes.ControlCharacterMax;
 		const isDelete: boolean = event.which === this.keyCodes.Delete;
 		const isFunctionKey: boolean =
-			event.which >= this.keyCodes.FunctionKeyStart ||
+			event.which >= this.keyCodes.FunctionKeyStart &&
 			event.which <= this.keyCodes.FunctionKeyEnd;
 		const isNumLock: boolean = event.which === this.keyCodes.NumLock;
 		const isContextMenu: boolean =
@@ -82,7 +102,7 @@ export class EditorComponent implements OnInit {
 		const isInsert: boolean = event.which === this.keyCodes.Insert;
 
 		const shouldIgnore: boolean =
-			isControlCharacter ||
+			(isControlCharacter && event.which !== this.keyCodes.Enter) ||
 			isDelete ||
 			isFunctionKey ||
 			isNumLock ||
@@ -99,6 +119,7 @@ export class EditorComponent implements OnInit {
 		if (event.which === this.keyCodes.Enter) {
 			event.preventDefault();
 			this.createNewLine();
+			this.writeOnLine("");
 			return;
 		}
 		this.writeOnLine(event.key);

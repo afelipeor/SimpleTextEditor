@@ -34,5 +34,18 @@ html {
 				}
 			}
 		}
+
+		.context-menu {
+			i {
+				&.icon {
+					svg {
+						fill: $background-color;
+						width: 1.5em;
+						height: 1.5em;
+						display: flex;
+					}
+				}
+			}
+		}
 	}
 }
