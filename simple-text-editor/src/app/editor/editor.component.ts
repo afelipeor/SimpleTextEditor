@@ -32,17 +32,27 @@ export class EditorComponent implements OnInit {
 	private createNewLine(): void {
 		this.index = this.index + 1;
 		this.writtenText.splice(this.index, 0);
-		console.log("this.writtenText:", this.writtenText);
 	}
 
-	@HostListener("document:mousedown", ["$event"])
-	public setFocusOnLine(event): void {
-		const elementClass: string = event.target.className;
-		this.index = Number(
-			elementClass.substring(elementClass.indexOf("_") + 1)
+	public setFocusOnLine(event, isOnClick: boolean = true): void {
+		console.log("event:", event);
+		const elementId: string = event.target.id;
+		console.log("elementId:", elementId);
+
+		const substring: number = Number(
+			elementId.substring(elementId.indexOf("_") + 1)
 		);
+		this.index = substring ? substring : this.writtenText.length - 1;
+		console.log("this.index:", this.index);
 		this.removeContentEditable();
-		const elementToFocus: HTMLElement = event.target;
+		let elementToFocus: HTMLElement;
+		if (isOnClick) {
+			elementToFocus = event.target;
+		} else {
+			setTimeout(() => {
+				elementToFocus = document.getElementById(elementId);
+			});
+		}
 		setTimeout(() => {
 			elementToFocus.setAttribute("contenteditable", "true");
 			elementToFocus.focus();
@@ -119,6 +129,10 @@ export class EditorComponent implements OnInit {
 		if (event.which === this.keyCodes.Enter) {
 			event.preventDefault();
 			this.createNewLine();
+			const simulatedEventObject = {
+				target: { id: `paragraph_${this.index}` },
+			};
+			this.setFocusOnLine(simulatedEventObject, false);
 			this.writeOnLine("");
 			return;
 		}

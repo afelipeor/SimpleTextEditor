@@ -3,6 +3,7 @@
 .editor {
 	p {
 		min-height: 1.5em;
+
 		&:focus {
 			outline: none;
 			background-color: $focus-background-color;

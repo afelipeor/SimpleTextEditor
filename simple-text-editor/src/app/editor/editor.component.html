@@ -1,6 +1,7 @@
 <app-context-menu *ngIf="showContextMenu"></app-context-menu>
 <div class="editor">
 	<p
+		(click)="setFocusOnLine($event)"
 		id="paragraph_{{ index }}"
 		*ngFor="let line of writtenText; let index = index"
 		>{{ line }}</p
