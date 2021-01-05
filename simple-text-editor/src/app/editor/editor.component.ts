@@ -35,17 +35,16 @@ export class EditorComponent implements OnInit {
 	}
 
 	public setFocusOnLine(event, isOnClick: boolean = true): void {
-		console.log("event:", event);
+		let elementToFocus: HTMLElement;
 		const elementId: string = event.target.id;
-		console.log("elementId:", elementId);
-
 		const substring: number = Number(
 			elementId.substring(elementId.indexOf("_") + 1)
 		);
+
 		this.index = substring ? substring : this.writtenText.length - 1;
-		console.log("this.index:", this.index);
+
 		this.removeContentEditable();
-		let elementToFocus: HTMLElement;
+
 		if (isOnClick) {
 			elementToFocus = event.target;
 		} else {
@@ -53,10 +52,12 @@ export class EditorComponent implements OnInit {
 				elementToFocus = document.getElementById(elementId);
 			});
 		}
+
 		setTimeout(() => {
 			elementToFocus.setAttribute("contenteditable", "true");
 			elementToFocus.focus();
 		});
+
 		this.getSelection(event, elementToFocus);
 	}
 
@@ -96,12 +97,16 @@ export class EditorComponent implements OnInit {
 
 	@HostListener("window:keydown", ["$event"])
 	public captureInput(event): void {
+		console.log("event.which:", event.which);
 		const isControlCharacter: boolean =
 			event.which <= this.keyCodes.ControlCharacterMax;
 		const isDelete: boolean = event.which === this.keyCodes.Delete;
 		const isFunctionKey: boolean =
 			event.which >= this.keyCodes.FunctionKeyStart &&
 			event.which <= this.keyCodes.FunctionKeyEnd;
+		const isArrowKey: boolean =
+			event.which >= this.keyCodes.ArrowKeyLeft &&
+			event.which <= this.keyCodes.ArrowKeyDown;
 		const isNumLock: boolean = event.which === this.keyCodes.NumLock;
 		const isContextMenu: boolean =
 			event.which === this.keyCodes.ContextMenu;
@@ -110,9 +115,10 @@ export class EditorComponent implements OnInit {
 		const isHome: boolean = event.which === this.keyCodes.Home;
 		const isEnd: boolean = event.which === this.keyCodes.End;
 		const isInsert: boolean = event.which === this.keyCodes.Insert;
+		const isEnter: boolean = event.which !== this.keyCodes.Enter;
 
 		const shouldIgnore: boolean =
-			(isControlCharacter && event.which !== this.keyCodes.Enter) ||
+			(isControlCharacter && isEnter) ||
 			isDelete ||
 			isFunctionKey ||
 			isNumLock ||
@@ -123,20 +129,48 @@ export class EditorComponent implements OnInit {
 			isEnd ||
 			isInsert;
 
-		if (shouldIgnore) {
+		const shouldPreventDefault: boolean = isArrowKey || isEnter;
+
+		if (!shouldPreventDefault && !shouldIgnore) {
+			this.writeOnLine(event.key);
 			return;
 		}
+
+		if (isArrowKey) {
+			this.setArrowKeysFunction(event.which);
+		}
+
 		if (event.which === this.keyCodes.Enter) {
-			event.preventDefault();
-			this.createNewLine();
-			const simulatedEventObject = {
-				target: { id: `paragraph_${this.index}` },
-			};
-			this.setFocusOnLine(simulatedEventObject, false);
-			this.writeOnLine("");
-			return;
+			this.setEnterFunction();
 		}
-		this.writeOnLine(event.key);
+
+		return;
+	}
+
+	private setArrowKeysFunction(key: number): void {
+		switch (key) {
+			case this.keyCodes.ArrowKeyLeft:
+				break;
+			case this.keyCodes.ArrowKeyUp:
+				this.jumpLines(key);
+				break;
+			case this.keyCodes.ArrowKeyRight:
+				break;
+			case this.keyCodes.ArrowKeyDown:
+				this.jumpLines(key);
+				break;
+		}
+	}
+
+	private jumpLines(key: number): void {}
+
+	private setEnterFunction(): void {
+		this.createNewLine();
+		const simulatedEventObject = {
+			target: { id: `paragraph_${this.index}` },
+		};
+		this.setFocusOnLine(simulatedEventObject, false);
+		this.writeOnLine("");
 	}
 
 	@HostListener("document: contextmenu", ["$event"])
