@@ -10,32 +10,45 @@ export class EditorComponent implements OnInit {
 	public readonly keyCodes: { [key: string]: number } = constants.KEY_CODES;
 
 	public showContextMenu = false;
-	public writtenText: string[] = ["Start typing here"];
-	public index: number;
+	public writtenText: string[] = ["Start typing to begin."];
+	public textToSave: string[] = [""];
+	public index = 0;
 
 	private clickCounter = 0;
+	private keyStrokesCount = 0;
+	private elementToFocus: HTMLElement;
 
 	constructor() {}
 
-	ngOnInit(): void {}
+	ngOnInit(): void {
+		this.forceFocus();
+	}
 
 	private writeOnLine(key: string): void {
 		let capturedString: string = this.writtenText[this.index]
 			? this.writtenText[this.index]
 			: "\n";
 
-		capturedString = `${capturedString}${key}`;
+		if (this.keyStrokesCount === 1) {
+			capturedString = `${key}`;
+			this.writtenText[this.index] = capturedString;
+			this.forceFocus();
+		} else {
+			capturedString = `${capturedString}${key}`;
+		}
 
-		this.writtenText[this.index] = capturedString;
+		console.log("capturedString:", capturedString);
+		this.textToSave[this.index] = capturedString;
 	}
 
 	private createNewLine(): void {
 		this.index = this.index + 1;
 		this.writtenText.splice(this.index, 0);
+		this.writtenText[this.index] = this.textToSave[this.index];
+		console.log("this.writtenText:", this.writtenText);
 	}
 
 	public setFocusOnLine(event, isOnClick: boolean = true): void {
-		let elementToFocus: HTMLElement;
 		const elementId: string = event.target.id;
 		const substring: number = Number(
 			elementId.substring(elementId.indexOf("_") + 1)
@@ -43,25 +56,28 @@ export class EditorComponent implements OnInit {
 
 		this.index = substring ? substring : this.writtenText.length - 1;
 
+		console.log("this.index:", this.index);
+		console.log("elementId:", elementId);
 		this.removeContentEditable();
 
 		if (isOnClick) {
-			elementToFocus = event.target;
+			this.elementToFocus = event.target;
 		} else {
 			setTimeout(() => {
-				elementToFocus = document.getElementById(elementId);
+				this.elementToFocus = document.getElementById(elementId);
+				console.log("this.elementToFocus:", this.elementToFocus);
 			});
 		}
 
 		setTimeout(() => {
-			elementToFocus.setAttribute("contenteditable", "true");
-			elementToFocus.focus();
+			this.elementToFocus.setAttribute("contenteditable", "true");
+			this.elementToFocus.focus();
 		});
 
-		this.getSelection(event, elementToFocus);
+		this.getSelection();
 	}
 
-	public getSelection(event, elementToFocus: HTMLElement): void {
+	public getSelection(): void {
 		this.clickCounter = this.clickCounter + 1;
 
 		if (this.clickCounter % 2 !== 0) {
@@ -73,7 +89,7 @@ export class EditorComponent implements OnInit {
 		const selectionText: string = selection.toString();
 
 		if (selectionText !== constants.IS_EMPTY_STRING) {
-			this.showContextMenu = true;
+			this.showContextMenu = false;
 		}
 	}
 
@@ -95,7 +111,7 @@ export class EditorComponent implements OnInit {
 		}
 	}
 
-	@HostListener("window:keydown", ["$event"])
+	// @HostListener("window:keydown", ["$event"])
 	public captureInput(event): void {
 		console.log("event.which:", event.which);
 		const isControlCharacter: boolean =
@@ -115,7 +131,7 @@ export class EditorComponent implements OnInit {
 		const isHome: boolean = event.which === this.keyCodes.Home;
 		const isEnd: boolean = event.which === this.keyCodes.End;
 		const isInsert: boolean = event.which === this.keyCodes.Insert;
-		const isEnter: boolean = event.which !== this.keyCodes.Enter;
+		const isEnter: boolean = event.which === this.keyCodes.Enter;
 
 		const shouldIgnore: boolean =
 			(isControlCharacter && isEnter) ||
@@ -131,9 +147,16 @@ export class EditorComponent implements OnInit {
 
 		const shouldPreventDefault: boolean = isArrowKey || isEnter;
 
+		this.keyStrokesCount = this.keyStrokesCount + 1;
+
 		if (!shouldPreventDefault && !shouldIgnore) {
 			this.writeOnLine(event.key);
 			return;
+		}
+
+		if (shouldPreventDefault) {
+			console.log("shouldPreventDefault:", shouldPreventDefault);
+			event.preventDefault();
 		}
 
 		if (isArrowKey) {
@@ -166,11 +189,14 @@ export class EditorComponent implements OnInit {
 
 	private setEnterFunction(): void {
 		this.createNewLine();
+		this.forceFocus();
+	}
+
+	private forceFocus(): void {
 		const simulatedEventObject = {
 			target: { id: `paragraph_${this.index}` },
 		};
 		this.setFocusOnLine(simulatedEventObject, false);
-		this.writeOnLine("");
 	}
 
 	@HostListener("document: contextmenu", ["$event"])

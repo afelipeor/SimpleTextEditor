@@ -2,6 +2,7 @@
 <div class="editor">
 	<p
 		(click)="setFocusOnLine($event)"
+		(keypress)="captureInput($event)"
 		id="paragraph_{{ index }}"
 		*ngFor="let line of writtenText; let index = index"
 		>{{ line }}</p
