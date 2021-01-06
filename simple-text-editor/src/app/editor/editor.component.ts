@@ -80,17 +80,9 @@ export class EditorComponent implements OnInit {
 	public getSelection(): void {
 		this.clickCounter = this.clickCounter + 1;
 
-		if (this.clickCounter % 2 !== 0) {
-			return;
-		}
-
 		this.clickCounter = 0;
 		const selection: any = window.getSelection();
 		const selectionText: string = selection.toString();
-
-		if (selectionText !== constants.IS_EMPTY_STRING) {
-			this.showContextMenu = false;
-		}
 	}
 
 	public removeContentEditable(): void {
@@ -111,7 +103,6 @@ export class EditorComponent implements OnInit {
 		}
 	}
 
-	// @HostListener("window:keydown", ["$event"])
 	public captureInput(event): void {
 		console.log("event.which:", event.which);
 		const isControlCharacter: boolean =
@@ -200,8 +191,18 @@ export class EditorComponent implements OnInit {
 	}
 
 	@HostListener("document: contextmenu", ["$event"])
-	public toggleContextMenu(event): void {
+	private toggleContextMenu(event): void {
 		event.preventDefault();
 		this.showContextMenu = !this.showContextMenu;
+	}
+
+	@HostListener("document: dblclick", ["$event"])
+	private openContextMenu($event): void {
+		this.showContextMenu = true;
+	}
+
+	@HostListener("document: click", ["$event"])
+	private closeContextMenu($event): void {
+		this.showContextMenu = false;
 	}
 }

@@ -5,20 +5,9 @@
 		padding: 0.75em 0.2em;
 		margin: 0;
 		cursor: text;
-
-		&.has-focus {
-			background-color: rebeccapurple;
-		}
 	}
 	[contenteditable] {
-		&:after {
-			content: "|";
-			color: powderblue;
-			animation-name: blink;
-			animation-duration: 0.9s;
-			animation-iteration-count: infinite;
-			animation-timing-function: ease;
-		}
+		caret-color: $caret-color;
 
 		&:focus,
 		&:active,
