@@ -10,4 +10,9 @@ export default class Utils {
 	public makeSvgCodeSafe(svgString: string): SafeHtml {
 		return this.sanitizer.bypassSecurityTrustHtml(svgString);
 	}
+
+	public setNullOrEmpty(variableToSet: any): any {
+		const setNull: boolean = typeof variableToSet !== "string";
+		return setNull ? null : "";
+	}
 }

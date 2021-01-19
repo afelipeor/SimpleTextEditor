@@ -1,6 +1,7 @@
 import { constants } from "./../../constants/constants";
 import { debounceTime } from "rxjs/operators";
 import { Component, HostListener, OnInit } from "@angular/core";
+import Utils from "src/utils/utils";
 
 @Component({
 	selector: "app-editor",
@@ -19,7 +20,7 @@ export class EditorComponent implements OnInit {
 	private keyStrokesCount = 0;
 	private elementToFocus: HTMLElement;
 
-	constructor() {}
+	constructor(private utils: Utils) {}
 
 	ngOnInit(): void {
 		this.forceFocus();
@@ -36,7 +37,7 @@ export class EditorComponent implements OnInit {
 		this.index = this.index + 1;
 		this.textToSave.splice(this.index, 0);
 		this.textToSave[this.index] = this.writtenText;
-		this.writtenText = "";
+		this.writtenText = this.utils.setNullOrEmpty(this.writtenText);
 	}
 
 	public setFocusOnLine(event, isOnClick: boolean = true): void {
