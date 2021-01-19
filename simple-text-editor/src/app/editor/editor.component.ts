@@ -1,4 +1,5 @@
 import { constants } from "./../../constants/constants";
+import { debounceTime } from "rxjs/operators";
 import { Component, HostListener, OnInit } from "@angular/core";
 
 @Component({
@@ -10,8 +11,8 @@ export class EditorComponent implements OnInit {
 	public readonly keyCodes: { [key: string]: number } = constants.KEY_CODES;
 
 	public showContextMenu = false;
-	public writtenText: string[] = ["Start typing to begin."];
 	public textToSave: string[] = [""];
+	public writtenText: string;
 	public index = 0;
 
 	private clickCounter = 0;
@@ -24,28 +25,18 @@ export class EditorComponent implements OnInit {
 		this.forceFocus();
 	}
 
-	private writeOnLine(key: string): void {
-		let capturedString: string = this.writtenText[this.index]
-			? this.writtenText[this.index]
-			: "\n";
-
-		if (this.keyStrokesCount === 1) {
-			capturedString = `${key}`;
-			this.writtenText[this.index] = capturedString;
-			this.forceFocus();
-		} else {
-			capturedString = `${capturedString}${key}`;
-		}
-
-		console.log("capturedString:", capturedString);
-		this.textToSave[this.index] = capturedString;
+	private writeOnLine(): void {
+		debounceTime(1000);
+		this.writtenText = document.getElementById(
+			`paragraph_${this.index}`
+		).textContent;
 	}
 
 	private createNewLine(): void {
 		this.index = this.index + 1;
-		this.writtenText.splice(this.index, 0);
-		this.writtenText[this.index] = this.textToSave[this.index];
-		console.log("this.writtenText:", this.writtenText);
+		this.textToSave.splice(this.index, 0);
+		this.textToSave[this.index] = this.writtenText;
+		this.writtenText = "";
 	}
 
 	public setFocusOnLine(event, isOnClick: boolean = true): void {
@@ -54,10 +45,12 @@ export class EditorComponent implements OnInit {
 			elementId.substring(elementId.indexOf("_") + 1)
 		);
 
-		this.index = substring ? substring : this.writtenText.length - 1;
+		this.index = substring
+			? substring
+			: this.textToSave
+			? this.textToSave.length - 1
+			: 0;
 
-		console.log("this.index:", this.index);
-		console.log("elementId:", elementId);
 		this.removeContentEditable();
 
 		if (isOnClick) {
@@ -65,13 +58,14 @@ export class EditorComponent implements OnInit {
 		} else {
 			setTimeout(() => {
 				this.elementToFocus = document.getElementById(elementId);
-				console.log("this.elementToFocus:", this.elementToFocus);
 			});
 		}
 
 		setTimeout(() => {
-			this.elementToFocus.setAttribute("contenteditable", "true");
-			this.elementToFocus.focus();
+			if (this.elementToFocus) {
+				this.elementToFocus.setAttribute("contenteditable", "true");
+				this.elementToFocus.focus();
+			}
 		});
 
 		this.getSelection();
@@ -104,7 +98,6 @@ export class EditorComponent implements OnInit {
 	}
 
 	public captureInput(event): void {
-		console.log("event.which:", event.which);
 		const isControlCharacter: boolean =
 			event.which <= this.keyCodes.ControlCharacterMax;
 		const isDelete: boolean = event.which === this.keyCodes.Delete;
@@ -141,12 +134,11 @@ export class EditorComponent implements OnInit {
 		this.keyStrokesCount = this.keyStrokesCount + 1;
 
 		if (!shouldPreventDefault && !shouldIgnore) {
-			this.writeOnLine(event.key);
+			this.writeOnLine();
 			return;
 		}
 
 		if (shouldPreventDefault) {
-			console.log("shouldPreventDefault:", shouldPreventDefault);
 			event.preventDefault();
 		}
 

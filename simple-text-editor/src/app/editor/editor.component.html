@@ -4,7 +4,10 @@
 		(click)="setFocusOnLine($event)"
 		(keypress)="captureInput($event)"
 		id="paragraph_{{ index }}"
-		*ngFor="let line of writtenText; let index = index"
+		data-placeholder="Start typing to begin"
+		spellcheck="true"
+		*ngFor="let line of textToSave; let index = index"
+		oninput="if(this.innerHTML.trim() === '')this.innerHTML=''"
 		>{{ line }}</p
 	>
 </div>
