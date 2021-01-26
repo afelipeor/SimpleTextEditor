@@ -1,6 +1,10 @@
 @import "../../assets/variables/colors";
 
-.editor {
+#editor {
+	width: 100%;
+	min-height: 98vh;
+	outline: none;
+
 	p {
 		padding: 0.75em 0.2em;
 		margin: 0;
