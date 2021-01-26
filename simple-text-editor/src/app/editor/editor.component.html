@@ -1,13 +1,2 @@
 <app-context-menu *ngIf="showContextMenu"></app-context-menu>
-<div class="editor">
-	<p
-		(click)="setFocusOnLine($event)"
-		(keypress)="captureInput($event)"
-		id="paragraph_{{ index }}"
-		data-placeholder="Start typing to begin"
-		spellcheck="true"
-		*ngFor="let line of textToSave; let index = index"
-		oninput="if(this.innerHTML.trim() === '')this.innerHTML=''"
-		>{{ line }}</p
-	>
-</div>
+<div id="editor" contenteditable="true"> </div>

@@ -11,8 +11,16 @@ export default class Utils {
 		return this.sanitizer.bypassSecurityTrustHtml(svgString);
 	}
 
+	public sanitizeHTML(htmlString: string): SafeHtml {
+		return this.sanitizer.bypassSecurityTrustHtml(htmlString);
+	}
+
 	public setNullOrEmpty(variableToSet: any): any {
 		const setNull: boolean = typeof variableToSet !== "string";
 		return setNull ? null : "";
+	}
+
+	public isEmptyArrayOrNull(array: any[]): boolean {
+		return array === null || array.length === 0;
 	}
 }
